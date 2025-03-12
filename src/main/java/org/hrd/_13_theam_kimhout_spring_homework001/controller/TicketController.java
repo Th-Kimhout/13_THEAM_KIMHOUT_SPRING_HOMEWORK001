@@ -32,20 +32,15 @@ public class TicketController {
 
     public TicketController() {
 
-        tickets.add(new Ticket(1, "John Doe", LocalDate.of(2023, 10, 1),
-                "StationA", "StationB", 150.0, true, TicketStatus.COMPLETED, "1"));
+        tickets.add(new Ticket(1, "John Doe", LocalDate.of(2023, 10, 1), "StationA", "StationB", 150.0, true, TicketStatus.COMPLETED, "1"));
 
-        tickets.add(new Ticket(2, "Jane Smith", LocalDate.of(2023, 10, 2),
-                "StationC", "StationD", 200.0, false, TicketStatus.CANCELLED, "3"));
+        tickets.add(new Ticket(2, "Jane Smith", LocalDate.of(2023, 10, 2), "StationC", "StationD", 200.0, false, TicketStatus.CANCELLED, "3"));
 
-        tickets.add(new Ticket(3, "Alice Johnson", LocalDate.of(2023, 10, 3),
-                "StationE", "StationF", 175.0, true, TicketStatus.BOOKED, "6"));
+        tickets.add(new Ticket(3, "Alice Johnson", LocalDate.of(2023, 10, 3), "StationE", "StationF", 175.0, true, TicketStatus.BOOKED, "6"));
 
-        tickets.add(new Ticket(4, "Bob Brown", LocalDate.of(2023, 10, 4),
-                "StationG", "StationH", 190.0, false, TicketStatus.CANCELLED, "2"));
+        tickets.add(new Ticket(4, "Bob Brown", LocalDate.of(2023, 10, 4), "StationG", "StationH", 190.0, false, TicketStatus.CANCELLED, "2"));
 
-        tickets.add(new Ticket(5, "Charlie Davis", LocalDate.of(2023, 10, 5),
-                "StationI", "StationJ", 160.0, false, TicketStatus.CANCELLED, "8"));
+        tickets.add(new Ticket(5, "Charlie Davis", LocalDate.of(2023, 10, 5), "StationI", "StationJ", 160.0, false, TicketStatus.CANCELLED, "8"));
     }
 
 
