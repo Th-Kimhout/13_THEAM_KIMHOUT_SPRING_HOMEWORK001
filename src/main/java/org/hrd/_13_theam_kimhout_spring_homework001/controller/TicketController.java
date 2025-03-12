@@ -53,7 +53,6 @@ public class TicketController {
         ArrayList<Ticket> subTickets = tickets.stream().skip(startIndex).limit(size).collect(Collectors.toCollection(ArrayList::new));
 
         ApiResponse<PageResponseListTicket> response = new ApiResponse<>(true, "Tickets Retrieved Successfully", HttpStatus.OK, new PageResponseListTicket(subTickets, pagination), LocalDateTime.now());
-
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
@@ -63,6 +62,10 @@ public class TicketController {
     public ResponseEntity<ApiResponse<ArrayList<Ticket>>> updateTicketPaymentStatus(@RequestBody UpdatePaymentStatusReqDto updatePaymentStatusReqDto) {
 
         ArrayList<Ticket> updatedTickets = tickets.stream().filter(ticket -> updatePaymentStatusReqDto.getTicketIds().contains(ticket.getTicketId())).peek(ticket -> ticket.setPaymentStatus(updatePaymentStatusReqDto.isPaymentStatus())).collect(Collectors.toCollection(ArrayList::new));
+        if (updatedTickets.isEmpty()) {
+            ApiResponse<ArrayList<Ticket>> response = new ApiResponse<>(false, "Cannot find ticket to update", HttpStatus.NOT_FOUND, updatedTickets, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
         ApiResponse<ArrayList<Ticket>> response = new ApiResponse<>(true, "Updated Tickets Payment Status Successfully", HttpStatus.OK, updatedTickets, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -84,6 +87,10 @@ public class TicketController {
     @GetMapping("/{ticket-id}")
     public ResponseEntity<ApiResponse<Ticket>> getTicketById(@PathVariable(name = "ticket-id") Integer ticketId) {
         Ticket foundTicket = tickets.stream().filter(t -> t.getTicketId() == ticketId).findFirst().orElse(null);
+        if (foundTicket == null) {
+            ApiResponse<Ticket> response = new ApiResponse<>(false, "Retrieve Tickets Successfully", HttpStatus.NOT_FOUND, null, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
         ApiResponse<Ticket> response = new ApiResponse<>(true, "Retrieve Tickets Successfully", HttpStatus.OK, foundTicket, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -91,6 +98,7 @@ public class TicketController {
     @Operation(summary = "Update existing ticket by ID")
     @PutMapping("/{ticket-id}")
     public ResponseEntity<ApiResponse<Ticket>> updateTicketById(@RequestBody CreateTicketReqDto createTicketReqDto, @PathVariable(name = "ticket-id") Integer ticketId) {
+
         Ticket updatedTicket = tickets.stream().filter(t -> t.getTicketId() == ticketId).peek(ticket -> {
 
             ticket.setPassengerName(createTicketReqDto.getPassengerName());
@@ -103,7 +111,10 @@ public class TicketController {
             ticket.setSeatNumber(createTicketReqDto.getSeatNumber());
 
         }).findFirst().orElse(null);
-
+        if (updatedTicket == null) {
+            ApiResponse<Ticket> response = new ApiResponse<>(false, "Cannot find ticket with ID : " + ticketId + " to update!", HttpStatus.NOT_FOUND, null, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
 
         ApiResponse<Ticket> response = new ApiResponse<>(true, "Update Ticket Successfully", HttpStatus.OK, updatedTicket, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -118,7 +129,7 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
         ApiResponse<Ticket> response = new ApiResponse<>(false, "No Ticket is found with ID : " + ticketId, HttpStatus.NOT_FOUND, null, LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 
     }
 
@@ -145,7 +156,7 @@ public class TicketController {
         ArrayList<Ticket> foundTickets = tickets.stream().filter(t -> t.getPassengerName().equals(passengerName)).collect(Collectors.toCollection(ArrayList::new));
         if (foundTickets.isEmpty()) {
             ApiResponse<ArrayList<Ticket>> response = new ApiResponse<>(false, "Cannot find Ticket(s) with passenger name : " + passengerName, HttpStatus.NOT_FOUND, foundTickets, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         ApiResponse<ArrayList<Ticket>> response = new ApiResponse<>(true, "Retrieved Tickets Successfully", HttpStatus.OK, foundTickets, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -157,7 +168,7 @@ public class TicketController {
         ArrayList<Ticket> foundTickets = tickets.stream().filter(ticket -> ticket.getTicketStatus().toString().equals(ticketStatus.toString()) && ticket.getTravelDate().isEqual(travelDate)).collect(Collectors.toCollection(ArrayList::new));
         if (foundTickets.isEmpty()) {
             ApiResponse<ArrayList<Ticket>> response = new ApiResponse<>(false, "Cannot find Ticket(s) with Ticket Status : " + ticketStatus + " and Date : " + travelDate, HttpStatus.NOT_FOUND, foundTickets, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
         ApiResponse<ArrayList<Ticket>> response = new ApiResponse<>(true, "Retrieved Tickets Successfully", HttpStatus.OK, foundTickets, LocalDateTime.now());
