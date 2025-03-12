@@ -135,7 +135,7 @@ public class TicketController {
             tickets.add(newTicket);
             addedTickets.add(newTicket);
         });
-        ApiResponse<ArrayList<Ticket>> response = new ApiResponse<>(true, "Create Tickets Successfully", HttpStatus.OK, addedTickets, LocalDateTime.now());
+        ApiResponse<ArrayList<Ticket>> response = new ApiResponse<>(true, "Create Tickets Successfully", HttpStatus.CREATED, addedTickets, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
